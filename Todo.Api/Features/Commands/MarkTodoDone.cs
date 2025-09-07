@@ -33,7 +33,7 @@ public class MarkTodoDoneHandler(ITodosRepository todosRepository)
 {
     public async Task<MarkTodoDoneResult> Handle(MarkTodoDoneCommand request, CancellationToken cancellationToken)
     {
-        var todo = await todosRepository.GetTodoByIdAsync(request.Id, cancellationToken);
+        var todo = await todosRepository.GetTodoByIdForUpdateAsync(request.Id, cancellationToken);
         if (todo == null)
             throw new TodoTaskNotFoundException(request.Id);
 
