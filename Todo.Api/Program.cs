@@ -50,7 +50,21 @@ builder.Services.AddExceptionHandler<CustomExceptionHandler>();
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
-    options.UseNpgsql(builder.Configuration.GetConnectionString("Database"));
+    options.UseNpgsql(builder.Configuration.GetConnectionString("Database"), npgsqlOptions =>
+    {
+        npgsqlOptions.CommandTimeout(30);
+        npgsqlOptions.EnableRetryOnFailure(maxRetryCount: 3);
+    });
+    
+    // Optimize for performance
+    options.EnableSensitiveDataLogging(false);
+    options.EnableServiceProviderCaching();
+    options.EnableDetailedErrors(builder.Environment.IsDevelopment());
+    
+    if (!builder.Environment.IsDevelopment())
+    {
+        options.LogTo(null); // Disable logging in production for performance
+    }
 });
 
 builder.Services.AddScoped<ITodosRepository, TodosRepository>();

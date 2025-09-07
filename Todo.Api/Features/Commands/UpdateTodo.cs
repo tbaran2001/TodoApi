@@ -41,7 +41,7 @@ public class UpdateTodoHandler(ITodosRepository todosRepository) : ICommandHandl
 {
     public async Task<UpdateTodoResult> Handle(UpdateTodoCommand request, CancellationToken cancellationToken)
     {
-        var todo = await todosRepository.GetTodoByIdAsync(request.Id, cancellationToken);
+        var todo = await todosRepository.GetTodoByIdForUpdateAsync(request.Id, cancellationToken);
         if (todo == null)
             throw new TodoTaskNotFoundException(request.Id);
 
